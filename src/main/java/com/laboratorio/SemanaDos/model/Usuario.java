@@ -24,4 +24,10 @@ public class Usuario{
 	private String cedula;
 	private String email;
 	private String celular;
+	
+    private Double capitalInicial; // P
+    
+    private Integer numCapitalizacionesAnio; // n
+    
+    private Integer tiempoAnios; // t
 }
