@@ -1,14 +1,21 @@
 package com.laboratorio.SemanaDos.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.laboratorio.SemanaDos.model.Resultado;
 import com.laboratorio.SemanaDos.model.Usuario;
+import com.laboratorio.SemanaDos.repository.UsuarioRepositorio;
 import com.laboratorio.SemanaDos.service.UsuarioServicio;
 
 @Service
 public class UsuarioServicioImpl implements UsuarioServicio {
 	
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+
 	public Resultado calcularInversion(Usuario form) {
     Resultado result = new Resultado();
 
@@ -55,6 +62,16 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             }
         }
         return "Sin Categoría (No aplica o n no es 12)"; // Para otros casos o cuando n no es 12
+    }
+
+    @Override
+    public void guardarUsuario(Usuario usuario) {
+        usuarioRepositorio.save(usuario);
+    }
+
+    @Override
+    public List<Usuario> listarTodosLosUsuarios() {
+    return usuarioRepositorio.findAll();
     }
 
 }

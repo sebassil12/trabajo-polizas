@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #0056b3;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #004080;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .empty-message {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sistema de Cálculo de Inversiones</h1>
+</header>
+
+<nav>
+    <a th:href="@{/investment}">Calculadora de Inversiones</a>
+    <a th:href="@{/usuarios}">Usuarios</a>
+</nav>
+
+<div class="container">
+    <h2>Usuarios con Proyecciones de Inversión</h2>
+
+    <div th:if="${#lists.isEmpty(usuarios)}">
+        <p class="empty-message">No hay usuarios registrados aún.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(usuarios)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombres</th>
+                    <th>Cédula</th>
+                    <th>Email</th>
+                    <th>Celular</th>
+                    <th>Capital Inicial</th>
+                    <th># Capitalizaciones</th>
+                    <th>Tiempo (Años)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.id}"></td>
+                    <td th:text="${usuario.nombres}"></td>
+                    <td th:text="${usuario.cedula}"></td>
+                    <td th:text="${usuario.email}"></td>
+                    <td th:text="${usuario.celular}"></td>
+                    <td th:text="${#numbers.formatDecimal(usuario.capitalInicial, 1, 2)} + ' USD'"></td>
+                    <td th:text="${usuario.numCapitalizacionesAnio}"></td>
+                    <td th:text="${usuario.tiempoAnios}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+    <a th:href="@{/}" class="button">Volver al formulario</a>
+</div>
+
+</body>
+</html>

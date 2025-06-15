@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Resultado {
-    private Double montoAcumulado; // A
+    private Double montoAcumulado;
     private Double interesGanado;
     private String categoriaCliente;
 }
