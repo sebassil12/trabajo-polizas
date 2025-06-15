@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.laboratorio.SemanaDos.impl.UsuarioServicioImpl;
@@ -28,15 +29,15 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/calculate")
-    public String calculateInvestment(@Valid Usuario investmentForm, BindingResult bindingResult, Model model) {
+    public String calculateInvestment(@Valid @ModelAttribute("investmentForm") Usuario investmentForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("investmentForm", investmentForm);
             return "investmentForm"; // Vuelve al formulario si hay errores de validación
         }
 
         try {
+            usuarioServicio.guardarUsuario(investmentForm); // Guardar el usuario
             Resultado result = usuarioServicio.calcularInversion(investmentForm);
-
-            usuarioServicio.guardarUsuario(investmentForm); // Guardar el usuario después del cálculo
             model.addAttribute("investmentResult", result);
             model.addAttribute("investmentForm", investmentForm); // Mantener los datos del formulario
         } catch (IllegalArgumentException e) {

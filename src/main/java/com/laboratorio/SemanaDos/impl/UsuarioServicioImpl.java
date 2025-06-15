@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.laboratorio.SemanaDos.model.Resultado;
 import com.laboratorio.SemanaDos.model.Usuario;
+import com.laboratorio.SemanaDos.repository.ResultadoRepositorio;
 import com.laboratorio.SemanaDos.repository.UsuarioRepositorio;
 import com.laboratorio.SemanaDos.service.UsuarioServicio;
 
@@ -16,40 +17,59 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-	public Resultado calcularInversion(Usuario form) {
-    Resultado result = new Resultado();
+    @Autowired
+    private ResultadoRepositorio resultadoRepositorio;
 
-    double P = form.getCapitalInicial();
-    int n = form.getNumCapitalizacionesAnio();
-    int t = form.getTiempoAnios();
-    double r; // Tasa de interés anual
+    public Resultado calcularInversion(Usuario form) {
+        // Validar que todos los campos requeridos no sean nulos
+        if (form.getCapitalInicial() == null || form.getNumCapitalizacionesAnio() == null || form.getTiempoAnios() == null) {
+            throw new IllegalArgumentException("Todos los campos son obligatorios.");
+        }
 
-    // Determinar la tasa de interés según la capitalización 
-    if (n == 2) { // Semestral 
-        r = 0.05; // 5% 
-    } else if (n == 4) { // Trimestral 
-        r = 0.07; // 7% 
-    } else if (n == 12) { // Mensual 
-        r = 0.11; // 11% 
-    } else {
-        // Manejar un caso por defecto o lanzar una excepción si n no es 2, 4 o 12
-        throw new IllegalArgumentException("Número de capitalizaciones por año no soportado. Debe ser 2 (semestral), 4 (trimestral) o 12 (mensual).");
+        double P = form.getCapitalInicial();
+        int n = form.getNumCapitalizacionesAnio();
+        int t = form.getTiempoAnios();
+
+        // Definir tasas como constantes
+        final double TASA_SEMESTRAL = 0.05; // 5%
+        final double TASA_TRIMESTRAL = 0.07; // 7%
+        final double TASA_MENSUAL = 0.11; // 11%
+
+        double r;
+
+        switch (n) {
+            case 2:
+                r = TASA_SEMESTRAL;
+                break;
+            case 4:
+                r = TASA_TRIMESTRAL;
+                break;
+            case 12:
+                r = TASA_MENSUAL;
+                break;
+            default:
+                throw new IllegalArgumentException("Número de capitalizaciones por año no soportado. Debe ser 2 (semestral), 4 (trimestral) o 12 (mensual).");
+        }
+
+        // Calcular monto acumulado con interés compuesto
+        double A = P * Math.pow(1 + (r / n), n * t);
+        double interesGanado = A - P;
+
+        // Redondear a dos decimales para mostrar resultados limpios
+        A = redondear(A);
+        interesGanado = redondear(interesGanado);
+
+        // Crear resultado
+        Resultado result = new Resultado();
+        result.setMontoAcumulado(A);
+        result.setInteresGanado(interesGanado);
+        result.setCategoriaCliente(categorizarCliente(P, n));
+        result.setUsuario(form);
+
+        resultadoRepositorio.save(result);
+
+        return result;
     }
-
-    // Calcular el monto acumulado (valor futuro) usando la fórmula de interés compuesto 
-    // A = P * (1 + r/n)^(n*t) 
-    double A = P * Math.pow((1 + r / n), (n * t));
-    result.setMontoAcumulado(A);
-
-    // Calcular el interés ganado
-    double interesGanado = A - P;
-    result.setInteresGanado(interesGanado);
-
-    // Categorizar al cliente 
-    result.setCategoriaCliente(categorizarCliente(P, n));
-
-    return result;
-}
 
     private String categorizarCliente(Double capitalInicial, Integer numCapitalizacionesAnio) {
         if (numCapitalizacionesAnio == 12) { // Solo se categoriza si la capitalización es mensual 
@@ -72,6 +92,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Override
     public List<Usuario> listarTodosLosUsuarios() {
     return usuarioRepositorio.findAll();
+    }
+
+    private double redondear(double valor) {
+    return Math.round(valor * 100.0) / 100.0;
     }
 
 }

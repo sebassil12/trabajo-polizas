@@ -39,7 +39,7 @@
 
     .container {
         max-width: 800px;
-        margin: 30px auto;
+        margin: 20px auto;
         background: white;
         padding: 30px;
         border-radius: 10px;
@@ -178,8 +178,7 @@
                 <p th:if="${#fields.hasErrors('capitalInicial')}" th:errors="*{capitalInicial}" class="error"></p>
             </div>
             <div>
-                <div>
-                    <label for="numCapitalizacionesAnio">Número de Periodos de Capitalización por Año (n):</label>
+                <label for="numCapitalizacionesAnio">Número de Periodos de Capitalización por Año (n):</label>
                     <p>
                         Selecciona una opción:
                         <ul>
@@ -195,7 +194,6 @@
                         <option value="12">Mensual (12 periodos/año - 11% interés)</option>
                     </select>
                     <p th:if="${#fields.hasErrors('numCapitalizacionesAnio')}" th:errors="*{numCapitalizacionesAnio}" class="error"></p>
-                <p th:if="${#fields.hasErrors('numCapitalizacionesAnio')}" th:errors="*{numCapitalizacionesAnio}" class="error"></p>
             </div>
             <div>
                 <label for="tiempoAnios">Tiempo en Años (t):</label>
@@ -218,7 +216,7 @@
             <p><strong>Categoría del Cliente:</strong> <span th:text="${investmentResult.categoriaCliente}"></span></p>
         </div>
 
-         <div style="text-align: center; margin-top: 20px;">
+        <div style="text-align: center; margin-top: 20px;">
             <a th:href="@{/usuarios}" class="btn-back">← Regresar a la Lista de Usuarios</a>
         </div>
     </div>

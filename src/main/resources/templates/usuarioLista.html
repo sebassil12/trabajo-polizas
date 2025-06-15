@@ -103,6 +103,9 @@
                     <th>Capital Inicial</th>
                     <th># Capitalizaciones</th>
                     <th>Tiempo (Años)</th>
+                    <th>Monto Acumulado</th>
+                    <th>Interés Ganado</th>
+                    <th>Categoría</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,6 +118,12 @@
                     <td th:text="${#numbers.formatDecimal(usuario.capitalInicial, 1, 2)} + ' USD'"></td>
                     <td th:text="${usuario.numCapitalizacionesAnio}"></td>
                     <td th:text="${usuario.tiempoAnios}"></td>
+
+                    <!-- Mostrar datos del resultado si existe -->
+                    <td th:text="${usuario.resultado != null ? #numbers.formatDecimal(usuario.resultado.montoAcumulado, 1, 2) + ' USD' : '-'}"></td>
+                    <td th:text="${usuario.resultado != null ? #numbers.formatDecimal(usuario.resultado.interesGanado, 1, 2) + ' USD' : '-'}"></td>
+                    <td th:text="${usuario.resultado != null ? usuario.resultado.categoriaCliente : '-'}"></td>
+
                 </tr>
             </tbody>
         </table>

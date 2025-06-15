@@ -1,9 +1,12 @@
 package com.laboratorio.SemanaDos.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
@@ -50,4 +53,7 @@ public class Usuario{
 	@NotNull(message = "El tiempo en años es obligatorio")
     @Min(value = 1, message = "El tiempo debe ser al menos un año")
     private Integer tiempoAnios; // t
+
+	@OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+	private Resultado resultado;
 }
